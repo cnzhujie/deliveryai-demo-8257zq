@@ -14,6 +14,7 @@ import { TopBar } from '@/components/TopBar'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useElderlyMode } from '@/hooks/useElderlyMode'
+import { useThemeMode } from '@/hooks/useThemeMode'
 import { orderReducer, initialState } from '@/state/orderReducer'
 import { products } from '@/data/menu'
 import { money } from '@/lib/utils'
@@ -37,6 +38,7 @@ export default function App() {
   const { t, i18n } = useTranslation()
   const [state, dispatch] = useReducer(orderReducer, initialState, createPreviewState)
   const { enabled: elderly, toggle: toggleElderly } = useElderlyMode()
+  const { mode: themeMode, cycle: cycleTheme } = useThemeMode()
   const [serviceOpen, setServiceOpen] = useState(false)
   const [consoleOpen, setConsoleOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
@@ -67,6 +69,11 @@ export default function App() {
     toggleElderly()
     dispatch({ type: 'SET_MESSAGE', message: elderly ? '已切换为常规模式' : '已切换为老人模式' })
   }
+  const handleCycleTheme = () => {
+    const next = themeMode === 'system' ? 'light' : themeMode === 'light' ? 'dark' : 'system'
+    cycleTheme()
+    dispatch({ type: 'SET_MESSAGE', message: t(`common.theme_${next}`) })
+  }
 
   if (state.view === 'bind' || !state.table) {
     return <BindTable onBind={(table) => dispatch({ type: 'BIND_TABLE', table })} />
@@ -77,15 +84,17 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-rice-100 paper-noise">
+    <div className="min-h-screen bg-rice-100 paper-noise dark:bg-charcoal-900">
       <TopBar
         table={state.table}
         view={state.view}
         serviceCount={waitingServices}
         language={i18n.language}
         elderly={elderly}
+        themeMode={themeMode}
         onToggleLanguage={toggleLanguage}
         onToggleElderly={handleToggleElderly}
+        onCycleTheme={handleCycleTheme}
         onView={changeView}
         onService={() => setServiceOpen(true)}
         onConsole={() => setConsoleOpen(true)}
@@ -99,9 +108,9 @@ export default function App() {
           <aside className="hidden lg:block">
             <div className="sticky top-28">
               <CartPanel items={state.cart} onQuantity={(uid, delta) => dispatch({ type: 'CHANGE_QTY', uid, delta })} onSubmit={submitOrder} />
-              <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-100/70 p-4 text-sm text-charcoal-700">
+              <div className="mt-4 rounded-2xl border border-amber-400/30 bg-amber-100/70 p-4 text-sm text-charcoal-700 dark:border-amber-400/20 dark:bg-amber-500/10 dark:text-rice-200">
                 <p className="font-bold">{t('common.collab_title')}</p>
-                <p className="mt-1 leading-6 text-charcoal-500">{t('common.collab_desc')}</p>
+                <p className="mt-1 leading-6 text-charcoal-500 dark:text-rice-200/70">{t('common.collab_desc')}</p>
               </div>
             </div>
           </aside>
@@ -151,7 +160,7 @@ export default function App() {
         )}
       </div>
 
-      <nav className="safe-bottom fixed bottom-0 left-0 right-0 z-30 grid grid-cols-4 border-t border-charcoal-900/5 bg-white/95 px-2 pt-2 backdrop-blur lg:hidden">
+      <nav className="safe-bottom fixed bottom-0 left-0 right-0 z-30 grid grid-cols-4 border-t border-charcoal-900/5 bg-white/95 px-2 pt-2 backdrop-blur dark:border-rice-200/10 dark:bg-charcoal-900/95 lg:hidden">
         <MobileNav active={state.view === 'menu'} icon={MenuIcon} label={t('common.nav_menu')} onClick={() => changeView('menu')} />
         <MobileNav active={state.view === 'order'} icon={ClipboardList} label={t('common.nav_order')} onClick={() => changeView('order')} />
         <MobileNav active={serviceOpen} icon={ConciergeBell} label={t('common.nav_service')} badge={waitingServices} onClick={() => setServiceOpen(true)} />
@@ -167,7 +176,7 @@ export default function App() {
 
 function MobileNav({ active, icon: Icon, label, badge, onClick }: { active: boolean; icon: typeof MenuIcon; label: string; badge?: number; onClick: () => void }) {
   return (
-    <button onClick={onClick} className={`relative flex flex-col items-center gap-1 rounded-xl py-2 text-xs font-semibold transition ${active ? 'bg-chili-50 text-chili-500' : 'text-charcoal-500'}`}>
+    <button onClick={onClick} className={`relative flex flex-col items-center gap-1 rounded-xl py-2 text-xs font-semibold transition ${active ? 'bg-chili-50 text-chili-500 dark:bg-chili-700/20 dark:text-chili-100' : 'text-charcoal-500 dark:text-rice-200/70'}`}>
       <Icon size={20} />{label}{badge ? <span className="absolute right-4 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-chili-500 px-1 text-white">{badge}</span> : null}
     </button>
   )

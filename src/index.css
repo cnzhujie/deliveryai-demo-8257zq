@@ -4,9 +4,11 @@
 @tailwind utilities;
 
 :root { color: #211f1c; background: #fbf5ea; font-synthesis: none; }
+.dark { color: #f3e6d0; background: #211f1c; }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: #fbf5ea; }
+.dark body { background: #211f1c; }
 button, input { font: inherit; }
 ::selection { background: #ffddd8; color: #a9231a; }
 
@@ -18,6 +20,11 @@ button, input { font: inherit; }
 .elderly .text-rice-200\/60 { color: rgb(243 230 208 / 0.9); }
 .elderly .text-white\/30 { color: rgb(255 255 255 / 0.75); }
 .elderly .text-white\/40 { color: rgb(255 255 255 / 0.8); }
+
+/* 老人模式：深色模式下增强半透明文字对比度 */
+.dark.elderly .text-rice-200\/40 { color: rgb(243 230 208 / 0.9); }
+.dark.elderly .text-rice-200\/60 { color: rgb(243 230 208 / 0.95); }
+.dark.elderly .text-rice-200\/70 { color: rgb(243 230 208 / 0.95); }
 
 /* 老人模式：主要交互元素触控区域 ≥ 44px */
 .elderly button { min-height: 2.2rem; }

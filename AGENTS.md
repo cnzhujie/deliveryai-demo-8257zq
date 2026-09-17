@@ -51,7 +51,7 @@ playwright.config.ts     # Playwright 配置
 ## 技术栈
 
 - **框架**：React 18 + TypeScript ~5.6 + Vite 6
-- **样式**：Tailwind CSS 3.4（单一浅色主题，无暗色模式）
+- **样式**：Tailwind CSS 3.4（浅色 + 深色双主题，darkMode: class 模式）
 - **UI 库**：Radix UI（Dialog）、lucide-react（图标）、class-variance-authority（Button 变体）
 - **国际化**：i18next + react-i18next（中/英双语）
 - **E2E 测试**：Playwright
@@ -76,7 +76,7 @@ playwright.config.ts     # Playwright 配置
 
 - 颜色类名**直接硬编码在组件 JSX** 中（如 `bg-rice-100`、`text-charcoal-900`、`border-charcoal-900/5`），未使用 CSS 变量或语义 token 层。
 - 新增组件时沿用同样的 Tailwind 类名直写模式，不引入 CSS 变量抽象层。
-- 当前为单一浅色主题，Tailwind 未配置 `darkMode`，组件中没有 `dark:` 变体。
+- 当前支持浅色与深色双主题，Tailwind 配置 `darkMode: 'class'`，组件中使用 `dark:` 变体适配深色配色。
 
 ### 全局过渡
 
@@ -121,7 +121,7 @@ export function useXxx() {
 ### 新增 localStorage 持久化功能
 
 - 统一使用 `try/catch` 包裹 `localStorage.getItem` / `setItem`，不可用时降级为内存态，不报错不阻塞。
-- 现有 localStorage key：`i18nextLng`（语言）、`elderly-mode`（老人模式，值为 `true`/`false`）。
+- 现有 localStorage key：`i18nextLng`（语言）、`elderly-mode`（老人模式，值为 `true`/`false`）、`theme-mode`（主题模式，值为 `system`/`light`/`dark`）。
 
 ### 新增挂载前初始化逻辑
 
